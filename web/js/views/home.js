@@ -58,8 +58,8 @@ function dashboard(ctx, checklistId, conversations, evaluations) {
       h('div', h('h2', 'Сводка по набору'), h('p.muted', `Набор данных: ${ctx.group}`)),
       h('a.simple-link', { href: '#/insights' }, 'Посмотреть результаты →')),
     h('div.home-summary-grid',
-      statCard('Всего диалогов', total, 'Все разговоры в выбранном наборе'),
-      h('article.home-stat',
+      statCard('Всего диалогов', total, 'Все разговоры в выбранном наборе', '#/dialogs'),
+      h('a.home-stat.home-stat-link', { href: checked < total ? '#/dialogs?status=todo' : '#/dialogs' },
         h('span.home-stat-label', 'Проверено'),
         h('strong.home-stat-value', `${checked} из ${total}`),
         h('div.home-progress', {
@@ -70,11 +70,11 @@ function dashboard(ctx, checklistId, conversations, evaluations) {
           'aria-valuenow': progress,
         }, h('span', { style: { width: `${progress}%` } })),
         h('small', `${progress}% готово`)),
-      statCard('Средняя оценка', fmtScore(average), scored.length ? 'По проверенным диалогам' : 'Появится после первой проверки'),
-      h('article.home-stat.attention',
+      statCard('Средняя оценка', fmtScore(average), scored.length ? 'По проверенным диалогам' : 'Появится после первой проверки', '#/insights'),
+      h('a.home-stat.home-stat-link.attention', { href: '#/dialogs?status=attention' },
         h('span.home-stat-label', 'Нужно проверить'),
         h('strong.home-stat-value', attention),
-        h('a.simple-link', { href: '#/dialogs?status=attention' }, attention ? 'Открыть список →' : 'Всё в порядке'))),
+        h('span.simple-link', attention ? 'Открыть список →' : 'Всё в порядке'))),
     serious
       ? h('div.attention-banner', { role: 'status' },
         h('div', h('strong', `Найдены серьёзные нарушения: ${serious}`), h('p', 'Откройте диалоги и проверьте отмеченные фрагменты.')),
@@ -97,8 +97,8 @@ function dashboard(ctx, checklistId, conversations, evaluations) {
   ];
 }
 
-function statCard(label, value, note) {
-  return h('article.home-stat',
+function statCard(label, value, note, href) {
+  return h(href ? 'a.home-stat.home-stat-link' : 'article.home-stat', href ? { href } : null,
     h('span.home-stat-label', label),
     h('strong.home-stat-value', value),
     h('small', note));

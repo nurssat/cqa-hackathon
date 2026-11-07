@@ -43,6 +43,7 @@ export async function render(root, ctx, jobId) {
         only_missing: onlyMissing.checked, refresh: refresh.checked, concurrency: Number(conc.value), runs: Number(runs.value),
       });
       toast(`Запущено: ${job.items.length} диалогов`);
+      window.dispatchEvent(new Event('cqa:batch-started'));
       watch(jobBox, ctx, job.id);
     } catch (err) {
       toast(err.message, 'err');
@@ -141,7 +142,7 @@ function draw(box, ctx, job) {
       } }, 'Остановить проверку'),
       job.status !== 'running' && (c.error || c.pending) ? h('button.btn.small.primary', {
         onclick: async () => {
-          try { const j = await api.post(`/api/batch/${enc(job.id)}/retry`); toast(`Повтор: ${j.items.length}`); watch(box, ctx, j.id); }
+          try { const j = await api.post(`/api/batch/${enc(job.id)}/retry`); toast(`Повтор: ${j.items.length}`); window.dispatchEvent(new Event('cqa:batch-started')); watch(box, ctx, j.id); }
           catch (e) { toast(e.message, 'err'); }
         },
       }, `Повторить ошибки (${c.error + c.pending})`) : null),

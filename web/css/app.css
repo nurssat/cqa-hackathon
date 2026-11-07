@@ -1237,3 +1237,21 @@ html[data-theme="dark"] .cqa .help-steps > div > span { color: #8eec8c; }
   .cqa .help-heading { grid-template-columns: minmax(0, 1fr) auto; }
   .cqa .help-mascot { grid-column: 1 / -1; grid-row: 2; width: 92px; margin: -.35rem auto -1rem; }
 }
+
+/* Clickable summary cards (home, results) */
+.cqa a.home-stat-link, .cqa a.kpi-link { color: inherit; text-decoration: none; cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.cqa a.home-stat-link:hover, .cqa a.kpi-link:hover { border-color: var(--accent); box-shadow: 0 8px 24px rgba(18, 64, 45, .10); transform: translateY(-1px); }
+.cqa a.home-stat-link:focus-visible, .cqa a.kpi-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .cqa a.home-stat-link, .cqa a.kpi-link { transition: none; } .cqa a.home-stat-link:hover, .cqa a.kpi-link:hover { transform: none; } }
+
+/* Header indicator for a running batch check */
+.cqa .batch-pill { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .75rem; border-radius: 999px; background: #fff3df; color: #7a4600; font-size: .85rem; font-weight: 650; text-decoration: none; white-space: nowrap; }
+.cqa .batch-pill[hidden] { display: none; }
+.cqa .batch-pill.done { background: #e3f1ea; color: #11633f; }
+.cqa .batch-pill.warn { background: #fdecea; color: #a5281b; }
+.cqa .batch-pill-bar { width: 56px; height: 6px; border-radius: 999px; background: rgba(122, 70, 0, .18); overflow: hidden; }
+.cqa .batch-pill-bar > span { display: block; height: 100%; background: #c26f00; }
+.cqa .batch-pill-spin { width: 10px; height: 10px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: cqa-spin .8s linear infinite; }
+@keyframes cqa-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .cqa .batch-pill-spin { animation: none; } }
+@media (max-width: 760px) { .cqa .batch-pill { font-size: .78rem; padding: .3rem .6rem; } .cqa .batch-pill-bar { display: none; } }

@@ -2,6 +2,7 @@
 import { api } from './api.js';
 import { h, mount, errorBox, loading, enhanceView } from './ui.js';
 import { initI18n, t } from './i18n.js';
+import { initBatchPill } from './batch-pill.js';
 
 const routes = [
   [/^#?\/?$/, () => import('./views/home.js'), 'home', 'Главная'],
@@ -32,6 +33,7 @@ const utilityToggle = document.getElementById('cqa-utility-toggle');
 const utilityMenu = document.getElementById('cqa-utility-menu');
 
 initI18n(localeSelect);
+initBatchPill(document.querySelector('.top-actions'));
 
 const headerMenus = [];
 
