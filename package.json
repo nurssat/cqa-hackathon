@@ -4,9 +4,12 @@
   "private": true,
   "description": "Conversation Quality Analytics prototype (Freedom Broker hackathon)",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server/server.js",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "results": "node scripts/results.js"
   }
 }
