@@ -35,6 +35,12 @@ const log = (m) => console.log(`[${elapsed()}] ${m}`);
 
 cl.seedDefault();
 const checklist = cl.get('chat-quality');
+const missingCodes = checklist.criteria.filter((k) => !k.code).map((k) => k.id);
+if (missingCodes.length) {
+  console.log(`ОШИБКА: в чек-листе v${checklist.version} нет кодов формата организаторов у критериев ${missingCodes.join(', ')}.`);
+  console.log('Импортируйте свежий файл с чек-листом: «Проверить набор» → «Дополнительные настройки» → «Загрузить резервную копию».');
+  process.exit(4);
+}
 log(`Набор ${group} → results/${set}/results.json · чек-лист «${checklist.name}» v${checklist.version} · прогонов: ${process.env.EVAL_RUNS || 1}`);
 
 // 1. Data from the API (fresh), retried inside fetchGroup.
