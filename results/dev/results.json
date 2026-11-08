@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "team_name": "CQA",
+  "team_name": "1104",
   "model": {
     "mode": "external_api",
     "name": "gemini-3.5-flash"
@@ -4582,7 +4582,7 @@
       "status": "error",
       "criteria": [],
       "score": null,
-      "error": "Gemini HTTP 429: Your project has exceeded its monthly spending cap. Please go to AI Studio at https://ai.studio/spend to manage your project spend cap. Learn more at https://ai.google.dev/gemini-api/docs/billing#project-spend-caps."
+      "error": "Диалог не был оценён."
     },
     {
       "conversation_id": "p4-ru-001",
@@ -4741,7 +4741,7 @@
       "status": "error",
       "criteria": [],
       "score": null,
-      "error": "Gemini HTTP 429: Your project has exceeded its monthly spending cap. Please go to AI Studio at https://ai.studio/spend to manage your project spend cap. Learn more at https://ai.google.dev/gemini-api/docs/billing#project-spend-caps."
+      "error": "Диалог не был оценён."
     }
   ]
 }
