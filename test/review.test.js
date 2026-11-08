@@ -32,3 +32,14 @@ test('contrast words alone do not flag a normal "No" explanation', () => {
   rec.criteria[0].explanation = 'Возможно, оператор учёл детали.';
   assert.equal(computeReviewFlags(rec, { messages: [] }, checklist)[0].code, 'hedged');
 });
+
+test('split votes: only serious disagreements are flagged', async () => {
+  const { seriousSplit } = await import('../server/lib/review.js');
+  const scale = { type: 'scale', scale: { steps: [{ value: 20 }, { value: 15 }, { value: 10 }, { value: 5 }, { value: 0 }] } };
+  assert.equal(seriousSplit([15, 15, 10], scale), false); // neighbouring steps
+  assert.equal(seriousSplit([0, 4, 4], { type: 'scale', scale: { steps: [{ value: 10 }, { value: 7 }, { value: 4 }, { value: 0 }] } }), false);
+  assert.equal(seriousSplit([20, 20, 10], scale), true); // two steps apart
+  assert.equal(seriousSplit([15, 'na', 15], scale), true);
+  assert.equal(seriousSplit(['yes', 'no', 'no'], { type: 'binary' }), true);
+  assert.equal(seriousSplit(['yes', 'yes', 'yes'], { type: 'binary' }), false);
+});

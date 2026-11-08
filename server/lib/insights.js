@@ -10,9 +10,9 @@ const isShortfall = (k, a) => (k.type === 'scale' ? typeof a === 'number' && a <
 export async function insights(group, checklistId = 'chat-quality') {
   const checklist = cl.get(checklistId);
   const evals = listEvaluations(group, checklistId);
-  if (evals.some((e) => !e.review_flags)) {
+  if (evals.length) {
     const convs = Object.fromEntries((await ds.getConversations(group)).map((c) => [c.conversation_id, c]));
-    for (const e of evals) if (!e.review_flags) e.review_flags = computeReviewFlags(e, convs[e.conversation_id], cl.get(e.checklist.id, e.checklist.version));
+    for (const e of evals) e.review_flags = computeReviewFlags(e, convs[e.conversation_id], cl.get(e.checklist.id, e.checklist.version));
   }
   const langs = [...new Set(evals.map((e) => e.language))].sort();
   const crits = checklist.criteria.map((k) => {

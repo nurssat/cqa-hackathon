@@ -26,6 +26,22 @@ export function quoteFound(quote, texts) {
 const UNSURE = /(^|[^\p{L}])(возможно|может быть|сложно (определить|сказать|оценить)|неясно|не совсем ясно|спорно|possibly|unclear|ambiguous|hard to tell)(?=[^\p{L}]|$)/iu;
 const CONTRAST = /(^|[^\p{L}])(хотя|однако|но при этом|although|however|but|дегенмен|бірақ)(?=[^\p{L}]|$)/iu;
 
+/**
+ * A split vote is worth a human look only when it is serious: Yes vs No vs N/A,
+ * or scale answers more than one step apart. Neighbouring steps (15 vs 10,
+ * 7 vs 10) are normal rater noise and are not flagged.
+ */
+export function seriousSplit(answers, k) {
+  const distinct = [...new Set(answers)];
+  if (distinct.length < 2) return false;
+  if (k?.type === 'scale' && distinct.every((a) => typeof a === 'number')) {
+    const steps = [...k.scale.steps.map((s) => s.value)].sort((a, b) => b - a);
+    const idx = distinct.map((a) => steps.indexOf(a));
+    return Math.max(...idx) - Math.min(...idx) > 1;
+  }
+  return true;
+}
+
 export function computeReviewFlags(rec, conv, checklist) {
   const flags = [];
   const texts = (idx) => idx.map((i) => conv?.messages?.[i]?.text).filter(Boolean);
@@ -39,7 +55,7 @@ export function computeReviewFlags(rec, conv, checklist) {
     }
   }
   for (const c of rec.criteria) {
-    if (c.votes && c.votes.agree < c.votes.total)
+    if (c.votes && c.votes.agree < c.votes.total && seriousSplit(c.votes.answers, checklist?.criteria.find((k) => k.id === c.id)))
       flags.push({ criterion_id: c.id, code: 'split_vote', message: `Прогоны модели разошлись (${c.votes.agree}/${c.votes.total} за итоговый ответ) — проверьте.` });
   }
   if (rec.repairs > 0) flags.push({ criterion_id: null, code: 'repaired', message: `Ответ модели исправлялся ${rec.repairs} раз(а) после проверки кодом.` });

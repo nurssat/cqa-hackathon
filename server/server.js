@@ -85,15 +85,15 @@ app.post('/api/groups/:group/conversations/:id/evaluate', async ({ params, body 
 app.get('/api/groups/:group/conversations/:id/evaluation', async ({ params, query }) => {
   const e = ev.getEvaluation(params.group, params.id, query.get('checklist') || 'chat-quality');
   if (!e) throw httpError(404, 'not evaluated yet');
-  if (!e.review_flags) e.review_flags = computeReviewFlags(e, await ds.getConversation(params.group, params.id), cl.get(e.checklist.id, e.checklist.version));
+  e.review_flags = computeReviewFlags(e, await ds.getConversation(params.group, params.id), cl.get(e.checklist.id, e.checklist.version));
   return e;
 });
 
 app.get('/api/groups/:group/evaluations', async ({ params, query }) => {
   const evals = ev.listEvaluations(params.group, query.get('checklist'));
-  if (evals.some((e) => !e.review_flags)) {
+  if (evals.length) {
     const convs = Object.fromEntries((await ds.getConversations(params.group)).map((c) => [c.conversation_id, c]));
-    for (const e of evals) if (!e.review_flags) e.review_flags = computeReviewFlags(e, convs[e.conversation_id], cl.get(e.checklist.id, e.checklist.version));
+    for (const e of evals) e.review_flags = computeReviewFlags(e, convs[e.conversation_id], cl.get(e.checklist.id, e.checklist.version));
   }
   return evals.map((e) => ({
     conversation_id: e.conversation_id,
